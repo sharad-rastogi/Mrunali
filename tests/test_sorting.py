@@ -4,19 +4,10 @@ from playwright.sync_api import expect
 
 
 @pytest.mark.regression
-def test_sort_products_by_price_low_to_high(
-    login_page,
-    inventory_page,
-    credentials
-):
+def test_sort_products_by_price_low_to_high(inventory_page):
 
-    # Login to the application
-    login_page.open()
-
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Open inventory page using saved authenticated session
+    inventory_page.open()
 
     # Verify inventory page
     expect(
@@ -42,19 +33,10 @@ def test_sort_products_by_price_low_to_high(
 
 
 @pytest.mark.regression
-def test_sort_products_by_name_z_to_a(
-    login_page,
-    inventory_page,
-    credentials
-):
+def test_sort_products_by_name_z_to_a(inventory_page):
 
-    # Login to the application
-    login_page.open()
-
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Open inventory page using saved authenticated session
+    inventory_page.open()
 
     # Verify inventory page
     expect(

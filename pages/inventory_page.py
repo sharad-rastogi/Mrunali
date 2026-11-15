@@ -32,6 +32,9 @@ class InventoryPage:
     def get_product_prices(self):
         return self.product_prices.all_text_contents()
 
+    def open(self):
+        self.page.goto("/inventory.html")
+
     def sort_products(self, option):
         self.sort_dropdown.select_option(option)
 
