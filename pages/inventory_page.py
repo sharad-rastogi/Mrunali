@@ -34,3 +34,22 @@ class InventoryPage:
 
     def sort_products(self, option):
         self.sort_dropdown.select_option(option)
+
+    def add_product_to_cart(self, product_name):
+
+        product_card = self.page.locator(
+            '[data-test="inventory-item"]'
+        ).filter(has_text=product_name)
+
+        product_card.get_by_role(
+            "button", name="Add to cart"
+        ).click()
+
+    def get_cart_badge_count(self):
+        return self.cart_badge
+
+    def get_product_card(self, product_name):
+
+        return self.page.locator(
+        '[data-test="inventory-item"]'
+    ).filter(has_text=product_name)
