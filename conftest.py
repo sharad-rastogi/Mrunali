@@ -43,16 +43,6 @@ def authenticated_storage_state(browser, base_url, credentials, tmp_path_factory
     # Confirm login was successful
     expect(page.locator('[data-test="inventory-container"]')).to_be_visible()
 
-    print(
-    "LOCAL STORAGE:",
-    page.evaluate("() => Object.entries(window.localStorage)")
-    )
-
-    print(
-    "COOKIES:",
-    context.cookies()
-    )
-
     # Save the authenticated browser state
     context.storage_state(path=str(storage_file))
     context.close()

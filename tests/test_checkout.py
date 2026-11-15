@@ -30,23 +30,17 @@ from playwright.sync_api import expect
     ]
 )
 def test_checkout_required_field_validation(
-    login_page,
     inventory_page,
     cart_page,
     checkout_page,
-    credentials,
     first_name,
     last_name,
     postal_code,
     expected_error
 ):
 
-    # Login
-    login_page.open()
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Open inventory using saved authenticated session
+    inventory_page.open()
 
     # Add a product to the cart
     inventory_page.add_product_to_cart(
@@ -72,24 +66,16 @@ def test_checkout_required_field_validation(
     ).to_have_text(expected_error)
 
 
-
 @pytest.mark.smoke
 @pytest.mark.checkout
 def test_complete_checkout_and_verify_total(
-    login_page,
     inventory_page,
     cart_page,
-    checkout_page,
-    credentials
+    checkout_page
 ):
 
-    # Step 1: Login
-    login_page.open()
-
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Step 1: Open inventory using saved authenticated session
+    inventory_page.open()
 
     expect(
         inventory_page.inventory_container
@@ -173,6 +159,3 @@ def test_complete_checkout_and_verify_total(
     expect(
         checkout_page.complete_header
     ).to_have_text("Thank you for your order!")
-
-
-    

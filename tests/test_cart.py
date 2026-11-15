@@ -5,20 +5,10 @@ from playwright.sync_api import expect
 
 @pytest.mark.smoke
 @pytest.mark.cart
-def test_add_two_products_to_cart(
-    login_page,
-    inventory_page,
-    cart_page,
-    credentials
-):
+def test_add_two_products_to_cart(inventory_page, cart_page):
 
-    # Login to the application
-    login_page.open()
-
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Open inventory page using saved authenticated session
+    inventory_page.open()
 
     # Verify inventory page is visible
     expect(

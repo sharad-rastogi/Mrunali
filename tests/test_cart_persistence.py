@@ -6,19 +6,12 @@ from playwright.sync_api import expect
 @pytest.mark.regression
 @pytest.mark.cart
 def test_cart_persistence_after_removing_product(
-    login_page,
     inventory_page,
-    cart_page,
-    credentials
+    cart_page
 ):
 
-    # Login
-    login_page.open()
-
-    login_page.login(
-        credentials["username"],
-        credentials["password"]
-    )
+    # Open inventory page using saved authenticated session
+    inventory_page.open()
 
     expect(
         inventory_page.inventory_container
@@ -82,4 +75,3 @@ def test_cart_persistence_after_removing_product(
             "button", name="Remove"
         )
     ).to_be_visible()
-
