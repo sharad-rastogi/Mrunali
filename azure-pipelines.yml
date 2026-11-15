@@ -1,0 +1,77 @@
+
+# Run pipeline on pushes to main or master
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+# Run pipeline on pull requests to main or master
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+# Hosted Ubuntu agent by default.
+# You can enter your self-hosted Linux pool name when running the pipeline.
+parameters:
+  - name: agentPool
+    displayName: Agent pool
+    type: string
+    default: ubuntu-latest
+
+pool:
+  ${{ if eq(parameters.agentPool, 'ubuntu-latest') }}:
+    vmImage: ubuntu-latest
+  ${{ else }}:
+    name: ${{ parameters.agentPool }}
+
+steps:
+  # Install Python
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11'
+      addToPath: true
+
+  # Install project dependencies
+  - script: |
+      python -m pip install --upgrade pip
+      python -m pip install -r requirements.txt
+    displayName: 'Install Python dependencies'
+
+  # Install Playwright Chromium and required system dependencies
+  - script: |
+      python -m playwright install --with-deps chromium
+    displayName: 'Install Playwright browser'
+
+  # Run the complete test suite in parallel
+  - script: |
+      python -c "from pathlib import Path; Path('reports').mkdir(exist_ok=True); Path('test-results').mkdir(exist_ok=True)"
+      pytest -n auto tests --junitxml=reports/junit.xml --html=reports/report.html --self-contained-html
+    displayName: 'Run Playwright tests'
+
+  # Publish JUnit results even if tests fail
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: 'reports/junit.xml'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Playwright Automation Results'
+
+  # Publish HTML report and other report files
+  - task: PublishPipelineArtifact@1
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: 'reports'
+      artifact: 'playwright-reports'
+    displayName: 'Publish test reports'
+
+  # Publish screenshots, traces and videos from failed tests
+  - task: PublishPipelineArtifact@1
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: 'test-results'
+      artifact: 'playwright-failure-artifacts'
+    displayName: 'Publish failure artifacts'
