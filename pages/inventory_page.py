@@ -14,12 +14,23 @@ class InventoryPage:
             '[data-test="shopping-cart-badge"]'
         )
 
-    def get_product_names(self):
-        return self.page.locator(
+        self.sort_dropdown = page.locator(
+            '[data-test="product-sort-container"]'
+        )
+
+        self.product_names = page.locator(
             '[data-test="inventory-item-name"]'
-        ).all_text_contents()
+        )
+
+        self.product_prices = page.locator(
+            '[data-test="inventory-item-price"]'
+        )
+
+    def get_product_names(self):
+        return self.product_names.all_text_contents()
 
     def get_product_prices(self):
-        return self.page.locator(
-            '[data-test="inventory-item-price"]'
-        ).all_text_contents()
+        return self.product_prices.all_text_contents()
+
+    def sort_products(self, option):
+        self.sort_dropdown.select_option(option)
