@@ -8,3 +8,6 @@ reports/*
 test-results/*
 !test-results/.gitkeep
 .vscode/
+# Allure generated reports
+allure-results/
+allure-report/
